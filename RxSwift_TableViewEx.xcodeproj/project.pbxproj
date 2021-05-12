@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,8 @@
 		4E55CD68264A5F6A00186B40 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4E55CD66264A5F6A00186B40 /* Main.storyboard */; };
 		4E55CD6A264A5F6C00186B40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4E55CD69264A5F6C00186B40 /* Assets.xcassets */; };
 		4E55CD6D264A5F6C00186B40 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4E55CD6B264A5F6C00186B40 /* LaunchScreen.storyboard */; };
+		4E55CD7B264A74FE00186B40 /* MemberListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E55CD7A264A74FE00186B40 /* MemberListCell.swift */; };
+		4E55CD7E264A7AF000186B40 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E55CD7D264A7AF000186B40 /* DetailViewController.swift */; };
 		969CF4CE0E1E71ADE30486E1 /* Pods_RxSwift_TableViewEx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECC587EC2BC52B5D4A61FBBF /* Pods_RxSwift_TableViewEx.framework */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +27,8 @@
 		4E55CD69264A5F6C00186B40 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4E55CD6C264A5F6C00186B40 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4E55CD6E264A5F6C00186B40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4E55CD7A264A74FE00186B40 /* MemberListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberListCell.swift; sourceTree = "<group>"; };
+		4E55CD7D264A7AF000186B40 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		A043C1DD47F6ECB2F5B24821 /* Pods-RxSwift_TableViewEx.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxSwift_TableViewEx.release.xcconfig"; path = "Target Support Files/Pods-RxSwift_TableViewEx/Pods-RxSwift_TableViewEx.release.xcconfig"; sourceTree = "<group>"; };
 		A551383CE6FAE34912E73B19 /* Pods-RxSwift_TableViewEx.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxSwift_TableViewEx.debug.xcconfig"; path = "Target Support Files/Pods-RxSwift_TableViewEx/Pods-RxSwift_TableViewEx.debug.xcconfig"; sourceTree = "<group>"; };
 		ECC587EC2BC52B5D4A61FBBF /* Pods_RxSwift_TableViewEx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxSwift_TableViewEx.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,7 +70,9 @@
 				4E55CD60264A5F6A00186B40 /* AppDelegate.swift */,
 				4E55CD62264A5F6A00186B40 /* SceneDelegate.swift */,
 				4E55CD64264A5F6A00186B40 /* ViewController.swift */,
+				4E55CD7D264A7AF000186B40 /* DetailViewController.swift */,
 				4E55CD66264A5F6A00186B40 /* Main.storyboard */,
+				4E55CD7A264A74FE00186B40 /* MemberListCell.swift */,
 				4E55CD69264A5F6C00186B40 /* Assets.xcassets */,
 				4E55CD6B264A5F6C00186B40 /* LaunchScreen.storyboard */,
 				4E55CD6E264A5F6C00186B40 /* Info.plist */,
@@ -88,7 +94,6 @@
 				A551383CE6FAE34912E73B19 /* Pods-RxSwift_TableViewEx.debug.xcconfig */,
 				A043C1DD47F6ECB2F5B24821 /* Pods-RxSwift_TableViewEx.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -208,7 +213,9 @@
 			files = (
 				4E55CD65264A5F6A00186B40 /* ViewController.swift in Sources */,
 				4E55CD61264A5F6A00186B40 /* AppDelegate.swift in Sources */,
+				4E55CD7E264A7AF000186B40 /* DetailViewController.swift in Sources */,
 				4E55CD63264A5F6A00186B40 /* SceneDelegate.swift in Sources */,
+				4E55CD7B264A74FE00186B40 /* MemberListCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
