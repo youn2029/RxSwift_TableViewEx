@@ -28,70 +28,57 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        loadMemberList { (list) in
-            self.memberList = list
-            DispatchQueue.main.async {
+        
+        loadMemberList()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { members in
+                print(members)
+                self.memberList = members
                 self.tableView.reloadData()
-            }
-        }
+            })
+            .disposed(by: disposeBag)
         
     }
     
     // 리스트 불러오기
-    func loadMemberList(completed: @escaping ([Member]) -> Void) {
+    func loadMemberList() -> Observable<[Member]> {
         
-        let task = URLSession.shared.dataTask(with: URL(string: MEMBER_LIST_URL)!) { (data, response, error) in
+        return Observable.create { emitter in
             
-            // error가 발생하면 종료
-            if let err = error {
-                print(err.localizedDescription)
-                return
+            let task = URLSession.shared.dataTask(with: URL(string: MEMBER_LIST_URL)!) { (data, response, error) in
+                
+                // error가 발생하면 종료
+                if let err = error {
+                    print(err.localizedDescription)
+                    emitter.onError(err)
+                    return
+                }
+                
+                // data값이 있는지 확인하고, data가 json 일때, swift 데이터 타입으로 변환
+                // 기존 json 변환 방법
+    //            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) else {
+    //                return
+    //            }
+                
+                // JSONDecoder를 통해 구조체에 decoding되는 방식
+                // 단, json과 1:1로 모두 매핑이 되야함
+                guard let data = data, let json = try? JSONDecoder().decode([Member].self, from: data) else {
+                    emitter.onCompleted()
+                    return
+                }
+                
+                // 받아온 json 파일 처리
+                emitter.onNext(json)
+                emitter.onCompleted()
+    //            print(json)
+                
             }
+            task.resume()   // 종료될 경우 다시 시작
             
-            // data값이 있는지 확인하고, data가 json 일때, swift 데이터 타입으로 변환
-            // 기존 json 변환 방법
-//            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) else {
-//                return
-//            }
-            
-            // JSONDecoder를 통해 구조체에 decoding되는 방식
-            // 단, json과 1:1로 모두 매핑이 되야함
-            guard let data = data, let json = try? JSONDecoder().decode([Member].self, from: data) else {
-                return
+            return Disposables.create {
+                task.cancel()
             }
-            
-            // 받아온 json 파일 처리
-            completed(json)
-//            print(json)
-            
         }
-        task.resume()   // 종료될 경우 다시 시작
-    }
-    
-    // 이미지 불러오기
-    func loadMemberAvatar(url: String, completed: @escaping (UIImage) -> Void) {
-        
-        guard let url = URL(string: url) else {
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            
-            // 에러 발생시 종료
-            if let err = error {
-                print(err.localizedDescription)
-                return
-            }
-            
-            // data nil 처리
-            guard let data = data, let image = UIImage(data: data) else {
-                return
-            }
-            
-            completed(image)
-            
-        }
-        task.resume()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -113,19 +100,12 @@ extension ViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let member = memberList[indexPath.row]
+        let item = memberList[indexPath.row]
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "memberListCell") as? MemberListCell
-        loadMemberAvatar(url: member.avatar) { (img) in
-            DispatchQueue.main.async {
-                cell?.avatarImgView.image = img
-            }
-        }
-        cell?.nameLabel.text = member.name
-        cell?.jobLabel.text = member.job
-        cell?.ageLabel.text = "(\(member.age))"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "memberListCell") as! MemberListCell
+        cell.setData(item)
         
-        return cell!
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

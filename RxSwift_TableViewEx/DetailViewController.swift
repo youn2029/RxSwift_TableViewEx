@@ -6,9 +6,12 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class DetailViewController: UIViewController {
     
+    var disposeBag = DisposeBag()
     var member: Member?
     
     @IBOutlet weak var avatarImgView: UIImageView!
@@ -21,44 +24,54 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        print(member)
-        
-        loadMemberAvatar(url: member!.avatar) { (img) in
-            DispatchQueue.main.async {
-                self.avatarImgView.image = img
-            }
+        if let member = member {
+            setData(member)
         }
-        idLabel.text = " # \(member!.id)"
-        nameLabel.text = member!.name
-        jobLabel.text = member!.job
-        ageLabel.text = "(\(member!.age))"
-        
+    }
+    
+    func setData(_ member: Member) {
+        loadMemberAvatar(url: member.avatar)
+            .observe(on: MainScheduler.instance)
+            .bind(to: avatarImgView.rx.image)
+            .disposed(by: disposeBag)
+        idLabel.text = " # \(member.id)"
+        avatarImgView.image = nil
+        nameLabel.text = member.name
+        jobLabel.text = member.job
+        ageLabel.text = "(\(member.age))"
     }
     
     // 이미지 불러오기
-    func loadMemberAvatar(url: String, completed: @escaping (UIImage) -> Void) {
+    func loadMemberAvatar(url: String) -> Observable<UIImage?> {
         
-        guard let url = URL(string: url) else {
-            return
+        return Observable.create{ emitter in
+            
+            let task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, response, error) in
+                
+                // 에러 발생시 종료
+                if let err = error {
+                    emitter.onError(err)
+                    return
+                }
+                
+                // data nil 처리
+                guard let data = data, let image = UIImage(data: data) else {
+                    emitter.onNext(nil)
+                    emitter.onCompleted()
+                    return
+                }
+                
+                emitter.onNext(image)
+                emitter.onCompleted()
+                
+            }
+            task.resume()
+            
+            return Disposables.create {
+                task.cancel()
+            }
         }
         
-        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            
-            // 에러 발생시 종료
-            if let err = error {
-                print(err.localizedDescription)
-                return
-            }
-            
-            // data nil 처리
-            guard let data = data, let image = UIImage(data: data) else {
-                return
-            }
-            
-            completed(image)
-            
-        }
-        task.resume()
     }
     
 
